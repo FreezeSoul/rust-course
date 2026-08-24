@@ -38,27 +38,17 @@ let b = (let a = 8);
 错误如下:
 
 ```console
-error: expected expression, found statement (`let`) // 期望表达式，却发现`let`语句
- --> src/main.rs:2:13
+error: expected expression, found `let` statement // 期望表达式，却发现`let`语句
+ --> src/main.rs:3:10
   |
-2 |     let b = let a = 8;
-  |             ^^^^^^^^^
+3 | let b = (let a = 8);
+  |          ^^^
   |
-  = note: variable declaration using `let` is a statement `let`是一条语句
-
-error[E0658]: `let` expressions in this position are experimental
-          // 下面的 `let` 用法目前是试验性的，在稳定版中尚不能使用
- --> src/main.rs:2:13
-  |
-2 |     let b = let a = 8;
-  |             ^^^^^^^^^
-  |
-  = note: see issue #53667 <https://github.com/rust-lang/rust/issues/53667> for more information
-  = help: you can write `matches!(<expr>, <pattern>)` instead of `let <pattern> = <expr>`
+  = note: only supported directly in conditions of `if` and `while` expressions // 允许通过 if let 和 while let 语法进行模式匹配
 
 ```
 
-以上的错误告诉我们 `let` 是语句，不是表达式，因此它不返回值，也就不能给其它变量赋值。但是该错误还透漏了一个重要的信息， `let` 作为表达式已经是试验功能了，也许不久的将来，我们在 [`stable rust`](https://course.rs/appendix/rust-version.html) 下可以这样使用。
+以上的错误告诉我们 `let` 是语句，不是表达式，因此它不返回值，也就不能给其它变量赋值。试图将 let 语句作为值赋给变量，违反了语法规则。
 
 ## 表达式
 
@@ -90,7 +80,7 @@ fn main() {
 
 该语句块是表达式的原因是：它的最后一行是表达式，返回了 `x + 1` 的值，注意 `x + 1` 不能以分号结尾，否则就会从表达式变成语句， **表达式不能包含分号**。这一点非常重要，一旦你在表达式后加上分号，它就会变成一条语句，再也**不会**返回一个值，请牢记！
 
-最后，表达式如果不返回任何值，会隐式地返回一个 [`()`](https://course.rs/basic/base-type/char-bool.html#单元类型) 。
+最后，表达式如果不返回任何值，会隐式地返回一个 [`()`](https://beatai.org/rust-course/basic/base-type/char-bool#单元类型) 。
 
 ```rust
 fn main() {

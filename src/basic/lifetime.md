@@ -2,7 +2,7 @@
 
 各位读者，之前的集合章节挺简单吧？是不是安逸了挺久了？要不咱们加点料？来试试 Rust 中令人闻风丧胆的生命周期？
 
-生命周期，简而言之就是引用的有效作用域。在大多数时候，我们无需手动的声明生命周期，因为编译器可以自动进行推导，用类型来类比下：
+生命周期，简而言之就是引用的有效作用域。在大多数时候，我们无需手动声明生命周期，因为编译器可以自动进行推导，用类型来类比下：
 
 - 就像编译器大部分时候可以自动推导类型 <-> 一样，编译器大多数时候也可以自动推导生命周期
 - 在多种类型存在时，编译器往往要求我们手动标明类型 <-> 当多个生命周期存在，且编译器无法推导出某个引用的生命周期时，就需要我们手动标明生命周期
@@ -138,7 +138,7 @@ help: consider introducing a named lifetime parameter // 考虑引入一个生�
 
 > 生命周期标注并不会改变任何引用的实际作用域 -- 鲁迅
 
-鲁迅说过的话，总是值得重点标注，当你未来更加理解生命周期时，你才会发现这句话的精髓和重要！现在先简单记住，**标记的生命周期只是为了取悦编译器，让编译器不要难为我们**，记住了吗？没记住，再回头看一遍，这对未来你遇到生命周期问题时会有很大的帮助！
+鲁迅说过的话，总是值得重点关注，当你未来更加理解生命周期时，你才会发现这句话的精髓和重要！现在先简单记住，**标记的生命周期只是为了取悦编译器，让编译器不要难为我们**，记住了吗？没记住，再回头看一遍，这对未来你遇到生命周期问题时会有很大的帮助！
 
 在很多时候编译器是很聪明的，但是总有些时候，它会化身大聪明，自以为什么都很懂，然后去拒绝我们代码的执行，此时，就需要我们通过生命周期标注来告诉这个大聪明：别自作聪明了，听我的就好。
 
@@ -287,7 +287,7 @@ error[E0515]: cannot return value referencing local variable `result` // 返回�
 那遇到这种情况该怎么办？最好的办法就是返回内部字符串的所有权，然后把字符串的所有权转移给调用者：
 
 ```rust
-fn longest<'a>(_x: &str, _y: &str) -> String {
+fn longest(_x: &str, _y: &str) -> String {
     String::from("really long string")
 }
 
@@ -617,7 +617,7 @@ let s: &'static str = "我没啥优点，就是活得久，嘿嘿";
 - 生命周期 `'static` 意味着能和程序活得一样久，例如字符串字面量和特征对象
 - 实在遇到解决不了的生命周期标注问题，可以尝试 `T: 'static`，有时候它会给你奇迹
 
-> 事实上，关于 `'static`, 有两种用法: `&'static` 和 `T: 'static`，详细内容请参见[此处](https://course.rs/advance/lifetime/static.html)。
+> 事实上，关于 `'static`, 有两种用法: `&'static` 和 `T: 'static`，详细内容请参见[此处](https://beatai.org/rust-course/advance/lifetime/static)。
 
 ## 一个复杂例子: 泛型、特征约束
 
@@ -647,7 +647,7 @@ where
 
 ## 课后练习
 
-> [Rust By Practice](https://practice-zh.course.rs/lifetime/basic.html)，支持代码在线编辑和运行，并提供详细的习题解答。（本节暂无习题解答）
+> [Rust By Practice](https://practice-zh.course.rs/lifetime/basic.html)，支持代码在线编辑和运行，并提供详细的[习题解答](https://github.com/sunface/rust-by-practice/blob/master/solutions/lifetime/basic.md)。
 
 ## 总结
 

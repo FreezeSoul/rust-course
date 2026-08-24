@@ -3,7 +3,7 @@
 
 
 ## 单元测试
-> 关于如何编写测试，请参见[自动化测试章节](https://course.rs/test/write-tests.html)
+> 关于如何编写测试，请参见[自动化测试章节](https://beatai.org/rust-course/test/write-tests)
 
 首先，单元测试代码要放在待测试的目标代码旁边，也就是同一个文件中:
 ```rust
@@ -67,7 +67,7 @@ mod test {
 ## Drop
 现在还有一个问题，我们是否需要手动来清理释放我们的链表？答案是 No，因为 Rust 为我们提供了 `Drop` 特征，若变量实现了该特征，则在它离开作用域时将自动调用解构函数以实现资源清理释放工作，最妙的是，这一切都发生在编译期，因此没有多余的性能开销。
 
-> 关于 Drop 特征的详细介绍，请参见[智能指针 - Drop](https://course.rs/advance/smart-pointer/drop.html)
+> 关于 Drop 特征的详细介绍，请参见[智能指针 - Drop](https://beatai.org/rust-course/advance/smart-pointer/drop)
 
 事实上，我们无需手动为自定义类型实现 `Drop` 特征，原因是 Rust 自动为几乎所有类型都实现了 `Drop`，例如我们自定义的结构体，只要结构体的所有字段都实现了 `Drop`，那结构体也会自动实现 `Drop` !
 
@@ -171,7 +171,7 @@ test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured
 <details>
   <summary>点击这里展开答案</summary>
 
-`self.pop()` 的会返回 `Option<i32>`, 而我们之前的实现仅仅对智能指针 `Box<Node>` 进行操作。前者会对值进行拷贝，而后者仅仅使用的是指针类型。
+`self.pop()` 会返回 `Option<i32>`, 而我们之前的实现仅仅对智能指针 `Box<Node>` 进行操作。前者会对值进行拷贝，而后者仅仅使用的是指针类型。
 
 当链表中包含的值是其他较大的类型时，那这个拷贝的开销将变得非常高昂。
 </details>

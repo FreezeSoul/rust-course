@@ -79,7 +79,7 @@ Tokio 提供了多种消息通道，可以满足不同场景的需求:
 
 细心的同学可能会发现，这里还少了一种类型：多生产者、多消费者，且每一条消息只能被其中一个消费者接收，如果有这种需求，可以使用 [`async-channel`](https://docs.rs/async-channel/latest/async_channel/) 包。
 
-以上这些消息通道都有一个共同点：适用于 `async` 编程，对于其它场景，你可以使用在[多线程章节](https://course.rs/advance/concurrency-with-threads/message-passing.html)中提到过的 `std::sync::mpsc` 和 `crossbeam::channel`， 这些通道在等待消息时会阻塞当前的线程，因此不适用于 `async` 编程。
+以上这些消息通道都有一个共同点：适用于 `async` 编程，对于其它场景，你可以使用在[多线程章节](https://beatai.org/rust-course/advance/concurrency-with-threads/message-passing)中提到过的 `std::sync::mpsc` 和 `crossbeam::channel`， 这些通道在等待消息时会阻塞当前的线程，因此不适用于 `async` 编程。
 
 在下面的代码中，我们将使用 `mpsc` 和 `oneshot`， 本章节完整的代码见[这里](https://github.com/tokio-rs/website/blob/master/tutorial-code/channels/src/main.rs)。
 
@@ -225,7 +225,7 @@ let (tx, rx) = oneshot::channel();
 
 使用方式跟 `mpsc` 很像，但是它并没有缓存长度，因为只能发送一条，接收一条，还有一点不同：你无法对返回的两个句柄进行 `clone`。
 
-为了让管理任务将结果准确的返回到发送者手中，这个管道的发送端必须要随着命令一起发送, 然后发出命令的任务保留管道的发送端。一个比较好的实现就是将管道的发送端放入 `Command` 的数据结构中，同时使用一个别名来代表该发送端:
+为了让管理任务将结果准确的返回到发送者手中，这个管道的发送端必须要随着命令一起发送, 然后发出命令的任务保留管道的接收端。一个比较好的实现就是将管道的发送端放入 `Command` 的数据结构中，同时使用一个别名来代表该发送端:
 
 ```rust
 use tokio::sync::oneshot;
@@ -334,10 +334,10 @@ loop {
 
 总之，在 Tokio 中我们必须要显式地引入并发和队列:
 
-- `tokio::spawn`
-- `select!`
-- `join!`
-- `mpsc::channel`
+- `tokio::spawn`  (生成新任务)
+- `select!`  (在多个 Future 中选择最先完成的一个)
+- `join!` (等待多个 Future 全部完成)
+- `mpsc::channel` (消息通道)
 
 当这么做时，我们需要小心的控制并发度来确保系统的安全。例如，当使用一个循环去接收 TCP 连接时，你要确保当前打开的 `socket` 数量在可控范围内，而不是毫无原则的接收连接。 再比如，当使用 `mpsc::channel` 时，要设置一个缓冲值。
 

@@ -2,7 +2,7 @@
 
 关于 `str` / `&str`，`[u8]` / `&[u8]` 区别，你能清晰的说出来嘛？如果答案是 No ，那就跟随我一起来看看切片和切片引用到底有何区别吧。
 
-> 在继续之前，查看[这里](https://course.rs/basic/compound-type/string-slice.html#切片slice)了解何为切片
+> 在继续之前，查看[这里](https://beatai.org/rust-course/basic/compound-type/string-slice#切片slice)了解何为切片
 
 切片允许我们引用集合中部分连续的元素序列，而不是引用整个集合。例如，字符串切片就是一个子字符串，数组切片就是一个子数组。
 
@@ -24,7 +24,7 @@ error[E0277]: the size for values of type `str` cannot be known at compilation t
   |         ^^^^^^ doesn't have a size known at compile-time
 ```
 
-编译器准确的告诉了我们原因：`str` 字符串切片它是 [`DST` 动态大小类型](https://course.rs/advance/into-types/sized.html#动态大小类型-dst)，这意味着编译器无法在编译期知道 `str` 类型的大小，只有到了运行期才能动态获知，这对于强类型、强安全的 Rust 语言来说是不可接受的。
+编译器准确的告诉了我们原因：`str` 字符串切片它是 [`DST` 动态大小类型](https://beatai.org/rust-course/advance/into-types/sized#动态大小类型-dst)，这意味着编译器无法在编译期知道 `str` 类型的大小，只有到了运行期才能动态获知，这对于强类型、强安全的 Rust 语言来说是不可接受的。
 
 也就是说，我们无法直接使用 `str`，而对于 `[u8]` 也是类似的，大家可以自己动手试试。
 
@@ -40,7 +40,7 @@ error[E0277]: the size for values of type `str` cannot be known at compilation t
 
 #### 为何切片引用可以存储在栈上
 
-切片引用是一个宽指针，存储在栈上，指向了堆上的切片数据，该引用包含了切片的起始位置和长度，而且最重要的是，类似于指针，引用的大小是固定的(起始位置和长度都是整形)，因此它才可以存储在栈上。
+切片引用是一个宽指针，存储在栈上，指向了堆上的切片数据，该引用包含了切片的起始位置和长度，而且最重要的是，类似于指针，引用的大小是固定的(起始位置和长度都是整型)，因此它才可以存储在栈上。
 
 #### 有没有可以存储在栈上的
 

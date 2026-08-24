@@ -38,7 +38,7 @@ mod front_of_house {
 
 ## 模块树
 
-在[上一节](https://course.rs/basic/crate-module/crate.html)中，我们提到过 `src/main.rs` 和 `src/lib.rs` 被称为包根(crate root)，这个奇葩名称的来源（我不想承认是自己翻译水平太烂-,-）是由于这两个文件的内容形成了一个模块 `crate`，该模块位于包的树形结构（由模块组成的树形结构）的根部：
+在[上一节](https://beatai.org/rust-course/basic/crate-module/crate)中，我们提到过 `src/main.rs` 和 `src/lib.rs` 被称为包根(crate root)，这个奇葩名称的来源（我不想承认是自己翻译水平太烂-,-）是由于这两个文件的内容形成了一个模块 `crate`，该模块位于包的树形结构（由模块组成的树形结构）的根部：
 
 ```console
 crate
@@ -127,7 +127,7 @@ front_of_house::hosting::add_to_waitlist();
 
 如果只是为了引用到指定模块中的对象，那么两种都可以，但是在实际使用时，需要遵循一个原则：**当代码被挪动位置时，尽量减少引用路径的修改**，相信大家都遇到过，修改了某处代码，导致所有路径都要挨个替换，这显然不是好的路径选择。
 
-回到之前的例子，如果我们把 `front_of_house` 模块和 `eat_at_restaurant` 移动到一个模块中 `customer_experience`，那么绝对路径的引用方式就必须进行修改：`crate::customer_experience::front_of_house ...`，但是假设我们使用的相对路径，那么该路径就无需修改，因为它们两个的相对位置其实没有变：
+回到之前的例子，假设要把 `front_of_house` 模块和 `eat_at_restaurant` 移动到一个模块中 `customer_experience`，那么绝对路径的引用方式就必须进行修改：`crate::customer_experience::front_of_house ...`，但如果使用的是相对路径，那该路径就无需修改，因为它们的相对位置其实没有变：
 
 ```console
 crate
@@ -346,12 +346,21 @@ error[E0583]: file not found for module `front_of_house`
   = help: to create the module `front_of_house`, create file "src/front_of_house.rs" or "src/front_of_house/mod.rs"
 ```
 
-是的，如果需要将文件夹作为一个模块，我们需要进行显示指定暴露哪些子模块。按照上述的报错信息，我们有两种方法：
+是的，如果需要将文件夹作为一个模块，我们需要进行显式指定暴露哪些子模块。按照上述的报错信息，我们有两种方法：
 
 - 在 `front_of_house` 目录里创建一个 `mod.rs`，如果你使用的 `rustc` 版本 `1.30` 之前，这是唯一的方法。
 - 在 `front_of_house` **同级**目录里创建一个与模块（目录）**同名**的 rs 文件 `front_of_house.rs`，在新版本里，更建议使用这样的命名方式来避免项目中存在大量同名的 `mod.rs` 文件（ Python 点了个 `踩`）。
 
-而无论是上述哪个方式创建的文件，其内容都是一样的，你需要定义你的子模块（子模块名与文件名相同）：
+如果使用第二种方式，文件结构将如下所示：
+```shell
+src
+├── front_of_house
+│   └── hosting.rs
+├── front_of_house.rs
+└── lib.rs
+```
+
+而无论是上述哪个方式创建的文件，其内容都是一样的，你需要在定义你(`mod.rs` 或 `front_of_house.rs`)的子模块（子模块名与文件名相同）：
 
 ```rust
 pub mod hosting;

@@ -1,12 +1,12 @@
 # 深入了解特征
 
-特征之于 Rust 更甚于接口之于其他语言，因此特征在 Rust 中很重要也相对较为复杂，我们决定把特征分为两篇进行介绍，[第一篇](https://course.rs/basic/trait/trait.html)在之前已经讲过，现在就是第二篇：关于特征的进阶篇，会讲述一些不常用到但是你该了解的特性。
+特征之于 Rust 更甚于接口之于其他语言，因此特征在 Rust 中很重要也相对较为复杂，我们决定把特征分为两篇进行介绍，[第一篇](https://beatai.org/rust-course/basic/trait/trait)在之前已经讲过，现在就是第二篇：关于特征的进阶篇，会讲述一些不常用到但是你该了解的特性。
 
 ## 关联类型
 
-在方法一章中，我们讲到了[关联函数](https://course.rs/basic/method#关联函数)，但是实际上关联类型和关联函数并没有任何交集，虽然它们的名字有一半的交集。
+在方法一章中，我们讲到了[关联函数](https://beatai.org/rust-course/basic/method#关联函数)，但是实际上关联类型和关联函数并没有任何交集，虽然它们的名字有一半的交集。
 
-关联类型是在特征定义的语句块中，申明一个自定义类型，这样就可以在特征的方法签名中使用该类型：
+关联类型是在特征定义的语句块中，声明一个自定义类型，这样就可以在特征的方法签名中使用该类型：
 
 ```rust
 pub trait Iterator {
@@ -20,7 +20,7 @@ pub trait Iterator {
 
 同时，`next` 方法也返回了一个 `Item` 类型，不过使用 `Option` 枚举进行了包裹，假如迭代器中的值是 `i32` 类型，那么调用 `next` 方法就将获取一个 `Option<i32>` 的值。
 
-还记得 `Self` 吧？在之前的章节[提到过](https://course.rs/basic/trait/trait-object#self-与-self)， **`Self` 用来指代当前调用者的具体类型，那么 `Self::Item` 就用来指代该类型实现中定义的 `Item` 类型**：
+还记得 `Self` 吧？在之前的章节[提到过](https://beatai.org/rust-course/basic/trait/trait-object#self-与-self)， **`Self` 用来指代当前调用者的具体类型，那么 `Self::Item` 就用来指代该类型实现中定义的 `Item` 类型**：
 
 ```rust
 impl Iterator for Counter {
@@ -80,6 +80,14 @@ trait Container{
 }
 
 fn difference<C: Container>(container: &C) {}
+```
+关联类型还可以被其它特征进行约束，例如：
+```rust
+trait Container{
+    type A: Display;
+    type B;
+    fn contains(&self, a: &Self::A, b: &Self::B) -> bool;
+}
 ```
 
 ## 默认泛型类型参数
@@ -232,7 +240,7 @@ Up!
 
 因为 `fly` 方法的参数是 `self`，当显式调用时，编译器就可以根据调用的类型( `self` 的类型)决定具体调用哪个方法。
 
-这个时候问题又来了，如果方法没有 `self` 参数呢？稍等，估计有读者会问：还有方法没有 `self` 参数？看到这个疑问，作者的眼泪不禁流了下来，大明湖畔的[关联函数](https://course.rs/basic/method.html#关联函数)，你还记得嘛？
+这个时候问题又来了，如果方法没有 `self` 参数呢？稍等，估计有读者会问：还有方法没有 `self` 参数？看到这个疑问，作者的眼泪不禁流了下来，大明湖畔的[关联函数](https://beatai.org/rust-course/basic/method#关联函数)，你还记得嘛？
 
 但是成年人的世界，就算再伤心，事还得做，咱们继续：
 
@@ -310,7 +318,7 @@ fn main() {
 
 ## 特征定义中的特征约束
 
-有时，我们会需要让某个特征 A 能使用另一个特征 B 的功能(另一种形式的特征约束)，这种情况下，不仅仅要为类型实现特征 A，还要为类型实现特征 B 才行，这就是 `supertrait` (实在不知道该如何翻译，有大佬指导下嘛？)
+有时，我们会需要让某个特征 A 能使用另一个特征 B 的功能(另一种形式的特征约束)，这种情况下，不仅仅要为类型实现特征 A，还要为类型实现特征 B 才行，这就是基特征( super trait )。
 
 例如有一个特征 `OutlinePrint`，它有一个方法，能够对当前的实现类型进行格式化输出：
 
@@ -372,9 +380,9 @@ impl fmt::Display for Point {
 
 ## 在外部类型上实现外部特征(newtype)
 
-在[特征](https://course.rs/basic/trait/trait#特征定义与实现的位置孤儿规则)章节中，有提到孤儿规则，简单来说，就是特征或者类型必需至少有一个是本地的，才能在此类型上定义特征。
+在[特征](https://beatai.org/rust-course/basic/trait/trait#特征定义与实现的位置孤儿规则)章节中，有提到孤儿规则，简单来说，就是特征或者类型必需至少有一个是本地的，才能在此类型上定义特征。
 
-这里提供一个办法来绕过孤儿规则，那就是使用**newtype 模式**，简而言之：就是为一个[元组结构体](https://course.rs/basic/compound-type/struct#元组结构体tuple-struct)创建新类型。该元组结构体封装有一个字段，该字段就是希望实现特征的具体类型。
+这里提供一个办法来绕过孤儿规则，那就是使用**newtype 模式**，简而言之：就是为一个[元组结构体](https://beatai.org/rust-course/basic/compound-type/struct#元组结构体tuple-struct)创建新类型。该元组结构体封装有一个字段，该字段就是希望实现特征的具体类型。
 
 该封装类型是本地的，因此我们可以为此类型实现外部的特征。
 
@@ -420,7 +428,7 @@ fn main() {
 
 类似的，任何数组上的方法，你都无法直接调用，需要先用 `self.0` 取出数组，然后再进行调用。
 
-当然，解决办法还是有的，要不怎么说 Rust 是极其强大灵活的编程语言！Rust 提供了一个特征叫 [`Deref`](https://course.rs/advance/smart-pointer/deref.html)，实现该特征后，可以自动做一层类似类型转换的操作，可以将 `Wrapper` 变成 `Vec<String>` 来使用。这样就会像直接使用数组那样去使用 `Wrapper`，而无需为每一个操作都添加上 `self.0`。
+当然，解决办法还是有的，要不怎么说 Rust 是极其强大灵活的编程语言！Rust 提供了一个特征叫 [`Deref`](https://beatai.org/rust-course/advance/smart-pointer/deref)，实现该特征后，可以自动做一层类似类型转换的操作，可以将 `Wrapper` 变成 `Vec<String>` 来使用。这样就会像直接使用数组那样去使用 `Wrapper`，而无需为每一个操作都添加上 `self.0`。
 
 同时，如果不想 `Wrapper` 暴露底层数组的所有方法，我们还可以为 `Wrapper` 去重载这些方法，实现隐藏的目的。
 

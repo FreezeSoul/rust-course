@@ -3,16 +3,6 @@
 [关于本书](about-book.md)
 [进入 Rust 编程世界](into-rust.md)
 [避免从入门到放弃](first-try/sth-you-should-not-do.md)
-<!-- [快速查询入口](index-list.md) 暂时屏蔽-->
-[社区和锈书](community.md)
-
----
-[Xobserve: 一切皆可观测](some-thoughts.md)
-[BeatAI: 工程师 AI 入门圣经](beat-ai.md)
-
-<!-- [一本生锈的书](rusty-book.md) -->
-<!-- [Rust 语言周刊](rust-weekly.md) -->
-<!-- [Rust 翻译计划( 代号 Rustt )](rustt.md) -->
 
 # Rust 语言基础学习
 
@@ -93,14 +83,14 @@
     - [Sized 和不定长类型 DST](advance/into-types/sized.md)
     - [枚举和整数](advance/into-types/enum-int.md)
   - [智能指针](advance/smart-pointer/intro.md)
-    - [Box<T>堆对象分配](advance/smart-pointer/box.md)
+    - [Box\<T\> 堆对象分配](advance/smart-pointer/box.md)
     - [Deref 解引用](advance/smart-pointer/deref.md)
     - [Drop 释放资源](advance/smart-pointer/drop.md)
     - [Rc 与 Arc 实现 1vN 所有权机制](advance/smart-pointer/rc-arc.md)
     - [Cell 与 RefCell 内部可变性](advance/smart-pointer/cell-refcell.md)
   - [循环引用与自引用](advance/circle-self-ref/intro.md)
     - [Weak 与循环引用](advance/circle-self-ref/circle-reference.md)
-    - [结构体中的自引用](advance/circle-self-ref/self-referential.md))
+    - [结构体中的自引用](advance/circle-self-ref/self-referential.md)
   - [多线程并发编程](advance/concurrency-with-threads/intro.md)
     - [并发和并行](advance/concurrency-with-threads/concurrency-parallelism.md)
     - [使用多线程](advance/concurrency-with-threads/thread.md)
@@ -140,7 +130,7 @@
   - [解析数据帧](advance-practice/frame.md)
   - [深入 async](advance-practice/async.md)
   - [select](advance-practice/select.md)
-  - [类似迭代器的 Stream](advance-practice/stream.md))
+  - [类似迭代器的 Stream](advance-practice/stream.md)
   - [优雅的关闭](advance-practice/graceful-shutdown.md)
   - [异步跟同步共存](advance-practice/bridging-with-sync.md)
 
@@ -385,3 +375,14 @@
     - [1.76](appendix/rust-versions/1.76.md)
     - [1.77](appendix/rust-versions/1.77.md)
     - [1.78](appendix/rust-versions/1.78.md)
+    - [1.79](appendix/rust-versions/1.79.md)
+    - [1.80](appendix/rust-versions/1.80.md)
+    - [1.81](appendix/rust-versions/1.81.md)
+    - [1.82](appendix/rust-versions/1.82.md)
+    - [1.83](appendix/rust-versions/1.83.md)
+    - [1.84](appendix/rust-versions/1.84.md)
+    - [1.85](appendix/rust-versions/1.85.md)
+    - [1.86](appendix/rust-versions/1.86.md)
+    - [1.87](appendix/rust-versions/1.87.md)
+    - [1.88](appendix/rust-versions/1.88.md)
+    - [1.89](appendix/rust-versions/1.89.md)

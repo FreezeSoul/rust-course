@@ -1,6 +1,6 @@
 # 错误处理
 
-在之前的[返回值和错误处理](https://course.rs/basic/result-error/intro.html)章节中，我们学习了几个重要的概念，例如 `Result` 用于返回结果处理，`?` 用于错误的传播，若大家对此还较为模糊，强烈建议回头温习下。
+在之前的[返回值和错误处理](https://beatai.org/rust-course/basic/result-error/intro)章节中，我们学习了几个重要的概念，例如 `Result` 用于返回结果处理，`?` 用于错误的传播，若大家对此还较为模糊，强烈建议回头温习下。
 
 在本章节中一起来看看如何对 `Result` ( `Option` ) 做进一步的处理，以及如何定义自己的错误类型。
 
@@ -90,37 +90,6 @@ fn main() {
     assert_eq!(o1.or_else(fn_err), o1); // Ok or_else Err = Ok
     assert_eq!(e1.or_else(fn_ok), o2);  // Err or_else Ok = Ok
     assert_eq!(e1.or_else(fn_err), e2); // Err1 or_else Err2 = Err2
-}
-```
-
-```rust
-fn main() {
-    // and_then with Option
-    let s1 = Some("some1");
-    let s2 = Some("some2");
-    let fn_some = |_| Some("some2"); // 类似于: let fn_some = |_| -> Option<&str> { Some("some2") };
-
-    let n: Option<&str> = None;
-    let fn_none = |_| None;
-
-    assert_eq!(s1.and_then(fn_some), s2); // Some1 and_then Some2 = Some2
-    assert_eq!(s1.and_then(fn_none), n);  // Some and_then None = None
-    assert_eq!(n.and_then(fn_some), n);   // None and_then Some = None
-    assert_eq!(n.and_then(fn_none), n);   // None1 and_then None2 = None1
-
-    // and_then with Result
-    let o1: Result<&str, &str> = Ok("ok1");
-    let o2: Result<&str, &str> = Ok("ok2");
-    let fn_ok = |_| Ok("ok2"); // 类似于: let fn_ok = |_| -> Result<&str, &str> { Ok("ok2") };
-
-    let e1: Result<&str, &str> = Err("error1");
-    let e2: Result<&str, &str> = Err("error2");
-    let fn_err = |_| Err("error2");
-
-    assert_eq!(o1.and_then(fn_ok), o2);  // Ok1 and_then Ok2 = Ok2
-    assert_eq!(o1.and_then(fn_err), e2); // Ok and_then Err = Err
-    assert_eq!(e1.and_then(fn_ok), e1);  // Err and_then Ok = Err
-    assert_eq!(e1.and_then(fn_err), e1); // Err1 and_then Err2 = Err1
 }
 ```
 
@@ -394,7 +363,7 @@ pub trait From<T>: Sized {
 }
 ```
 
-> 事实上，该特征在之前的 [`?` 操作符](https://course.rs/basic/result-error/result.html#传播界的大明星-)章节中就有所介绍。
+> 事实上，该特征在之前的 [`?` 操作符](https://beatai.org/rust-course/basic/result-error/result#传播界的大明星-)章节中就有所介绍。
 >
 > 大家都使用过 `String::from` 函数吧？它可以通过 `&str` 来创建一个 `String`，其实该函数就是 `From` 特征提供的
 
@@ -684,8 +653,6 @@ fn render() -> Result<String> {
     Ok(source)
 }
 ```
-
-关于如何选用 `thiserror` 和 `anyhow` 只需要遵循一个原则即可：**是否关注自定义错误消息**，关注则使用 `thiserror`（常见业务代码），否则使用 `anyhow`（编写第三方库代码）。
 
 ## 总结
 

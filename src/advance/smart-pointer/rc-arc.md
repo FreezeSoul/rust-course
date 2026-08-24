@@ -52,7 +52,7 @@ fn main() {
 
 不要被 `clone` 字样所迷惑，以为所有的 `clone` 都是深拷贝。这里的 `clone` **仅仅复制了智能指针并增加了引用计数，并没有克隆底层数据**，因此 `a` 和 `b` 是共享了底层的字符串 `s`，这种**复制效率是非常高**的。当然你也可以使用 `a.clone()` 的方式来克隆，但是从可读性角度，我们更加推荐 `Rc::clone` 的方式。
 
-实际上在 Rust 中，还有不少 `clone` 都是浅拷贝，例如[迭代器的克隆](https://course.rs/compiler/pitfalls/iterator-everywhere.html)。
+实际上在 Rust 中，还有不少 `clone` 都是浅拷贝，例如[迭代器的克隆](https://beatai.org/rust-course/compiler/pitfalls/iterator-everywhere)。
 
 #### 观察引用计数的变化
 
@@ -171,7 +171,7 @@ fn main() {
 error[E0277]: `Rc<String>` cannot be sent between threads safely
 ```
 
-表面原因是 `Rc<T>` 不能在线程间安全的传递，实际上是因为它没有实现 `Send` 特征，而该特征是恰恰是多线程间传递数据的关键，我们会在多线程章节中进行讲解。
+表面原因是 `Rc<T>` 不能在线程间安全的传递，实际上是因为它没有实现 `Send` 特征，而该特征恰恰是多线程间传递数据的关键，我们会在多线程章节中进行讲解。
 
 当然，还有更深层的原因：由于 `Rc<T>` 需要管理引用计数，但是该计数器并没有使用任何并发原语，因此无法实现原子化的计数操作，最终会导致计数错误。
 

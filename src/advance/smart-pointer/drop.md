@@ -43,7 +43,7 @@ struct Foo;
 
 impl Drop for Foo {
     fn drop(&mut self) {
-        println!("Dropping Foo!")
+        println!("Dropping Foo!");
     }
 }
 
@@ -95,7 +95,7 @@ impl Drop for HasTwoDrops {
 
 原因在于，Rust 自动为几乎所有类型都实现了 `Drop` 特征，因此就算你不手动为结构体实现 `Drop`，它依然会调用默认实现的 `drop` 函数，同时再调用每个字段的 `drop` 方法，最终打印出：
 
-```cnosole
+```console
 Dropping HasDrop1!
 Dropping HasDrop2!
 ```
@@ -156,7 +156,9 @@ fn main() {
 
 Bingo，完美拿走了所有权，而且这种实现保证了后续的使用必定会导致编译错误，因此非常安全！
 
-细心的同学可能已经注意到，这里直接调用了 `drop` 函数，并没有引入任何模块信息，原因是该函数在[`std::prelude`](https://course.rs/appendix/prelude.html)里。
+细心的同学可能已经注意到，这里直接调用了 `drop` 函数，并没有引入任何模块信息，原因是该函数在[`std::prelude`](https://beatai.org/rust-course/appendix/prelude)里。
+
+> 事实上，能被显式调用的drop(_x)函数只是个空函数，在拿走目标值的所有权后没有任何操作。而由于其持有目标值的所有权，在drop(_x)函数结束之际，编译器会执行_x真正的析构函数，从而完成释放资源的操作。换句话说，drop(_x)函数只是帮助目标值的所有者提前离开了作用域。https://doc.rust-lang.org/std/mem/fn.drop.html
 
 ## Drop 使用场景
 
@@ -171,7 +173,7 @@ Bingo，完美拿走了所有权，而且这种实现保证了后续的使用必
 
 ## 互斥的 Copy 和 Drop
 
-我们无法为一个类型同时实现 `Copy` 和 `Drop` 特征。因为实现了 `Copy` 的特征会被编译器隐式的复制，因此非常难以预测析构函数执行的时间和频率。因此这些实现了 `Copy` 的类型无法拥有析构函数。
+我们无法为一个类型同时实现 `Copy` 和 `Drop` 特征。因为实现了 `Copy` 特征的类型会被编译器隐式的复制，因此非常难以预测析构函数执行的时间和频率。因此这些实现了 `Copy` 的类型无法拥有析构函数。
 
 ```rust
 #[derive(Copy)]

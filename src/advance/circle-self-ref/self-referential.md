@@ -1,4 +1,4 @@
-## 结构体自引用
+# 结构体自引用
 
 结构体自引用在 Rust 中是一个众所周知的难题，而且众说纷纭，也没有一篇文章能把相关的话题讲透，那本文就王婆卖瓜，来试试看能不能讲透这一块儿内容，让读者大大们舒心。
 
@@ -27,7 +27,7 @@ fn main(){
 }
 ```
 
-运行后报错：
+编译时报错：
 
 ```console
  let v = SelfRef {
@@ -147,7 +147,7 @@ impl SelfRef {
 
     fn pointer_to_value(&self) -> &String {
         assert!(!self.pointer_to_value.is_null(),
-            "Test::b called without Test::init being called first");
+            "SelfRef::pointer_to_value called without SelfRef::init being called first");
         unsafe { &*(self.pointer_to_value) }
     }
 }
@@ -189,7 +189,8 @@ impl SelfRef {
     }
 
     fn pointer_to_value(&self) -> &String {
-        assert!(!self.pointer_to_value.is_null(), "Test::b called without Test::init being called first");
+        assert!(!self.pointer_to_value.is_null(),
+            "SelfRef::pointer_to_value called without SelfRef::init being called first");
         unsafe { &*(self.pointer_to_value) }
     }
 }

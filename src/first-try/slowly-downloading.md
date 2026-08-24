@@ -25,7 +25,7 @@ export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_pr
 ###  修改 Rust 的下载镜像为国内的镜像地址
 这个效果最直接，一劳永逸，但是就是配置起来略微麻烦。
 
-为了使用 `crates.io` 之外的注册服务，我们需要对 `$HOME/.cargo/config.toml` ($CARGO_HOME 下) 文件进行配置，添加新的服务提供商，有两种方式可以实现：增加新的镜像地址和覆盖默认的镜像地址。
+为了使用 `crates.io` 之外的注册服务，我们需要对 `$HOME/.cargo/config.toml` (`$CARGO_HOME` 下) 文件进行配置，添加新的服务提供商，有两种方式可以实现：增加新的镜像地址和覆盖默认的镜像地址。
 
 ### 新增镜像地址
 
@@ -102,7 +102,7 @@ registry = "git://mirrors.ustc.edu.cn/crates.io-index"
 
 简单吧？只要这样配置后，以往需要去 `crates.io` 下载的包，会全部从科大的镜像地址下载，速度刷刷的... 我的 300M 大刀（宽带）终于有了用武之地。
 
-**这里强烈推荐大家在学习完后面的基本章节后，看一下 [Cargo 使用指南章节](https://course.rs/cargo/intro.html)，对于你的 Rust 之旅会有莫大的帮助！**
+**这里强烈推荐大家在学习完后面的基本章节后，看一下 [Cargo 使用指南章节](https://beatai.org/rust-course/cargo/intro)，对于你的 Rust 之旅会有莫大的帮助！**
 
 
 ## 下载卡住

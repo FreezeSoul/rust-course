@@ -271,7 +271,7 @@ let closure_slision = |x: &i32| -> &i32 { x };
 > ```
 ## NLL (Non-Lexical Lifetime)
 
-之前我们在[引用与借用](https://course.rs/basic/ownership/borrowing.html#NLL)那一章其实有讲到过这个概念，简单来说就是：**引用的生命周期正常来说应该从借用开始一直持续到作用域结束**，但是这种规则会让多引用共存的情况变得更复杂：
+之前我们在[引用与借用](https://beatai.org/rust-course/basic/ownership/borrowing#NLL)那一章其实有讲到过这个概念，简单来说就是：**引用的生命周期正常来说应该从借用开始一直持续到作用域结束**，但是这种规则会让多引用共存的情况变得更复杂：
 
 ```rust
 fn main() {
@@ -422,7 +422,7 @@ impl Reader for BufReader<'_> {
 }
 ```
 
-`'_` 生命周期表示 `BufReader` 有一个不使用的生命周期，我们可以忽略它，无需为它创建一个名称。
+`'_` 称为匿名生命周期（anonymous lifetime），在这里表示 `BufReader` 有一个不使用的生命周期，我们可以忽略它，无需为它创建一个名称。
 
 歪个楼，有读者估计会发问：既然用不到 `'a`，为何还要写出来？如果你仔细回忆下上一节的内容，里面有一句专门用粗体标注的文字：**生命周期参数也是类型的一部分**，因此 `BufReader<'a>` 是一个完整的类型，在实现它的时候，你不能把 `'a` 给丢了！
 

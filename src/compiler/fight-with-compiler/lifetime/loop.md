@@ -68,7 +68,7 @@ error[E0499]: cannot borrow `arr[_]` as mutable more than once at a time
 2. `&mut arr[i]`报错，因为在上一次循环中，已经借用过同样的可变引用`&mut arr[i]`
 3. `tile`的生命周期跟`arr`不一致
 
-奇了怪了，跟我们之前的分析完全背道而驰，按理来说`arr.len()`的借用应该在调用后立刻结束，而不是持续到后面的代码行；同时可变借用`&mut arr[i]`也应该随着每次循环的结束而结束，为什么会前后两次循环会因为同一处的引用而报错？
+奇了怪了，跟我们之前的分析完全背道而驰，按理来说`arr.len()`的借用应该在调用后立刻结束，而不是持续到后面的代码行；同时可变借用`&mut arr[i]`也应该随着每次循环的结束而结束，为什么前后两次循环会因为同一处的引用而报错？
 
 ## 尝试去掉中间变量
 
@@ -168,7 +168,7 @@ impl A {
 
 我们来逐步深入分析下：
 
-1. 首先为`two`方法增加一下生命周期标识: `fn two<'a>(&'a mut self) -> &'a i32 { .. }`, 这里根据生命周期的[消除规则](https://course.rs/basic/lifetime.html#三条消除规则)添加的
+1. 首先为`two`方法增加一下生命周期标识: `fn two<'a>(&'a mut self) -> &'a i32 { .. }`, 这里根据生命周期的[消除规则](https://beatai.org/rust-course/basic/lifetime#三条消除规则)添加的
 2. 根据生命周期标识可知：`two`中返回的`k`的生命周期必须是`'a`
 3. 根据第 2 条，又可知：`let k = self.one();`中对`self`的借用生命周期也是`'a`
 4. 因为`k`的借用发生在`loop`循环内，因此它需要小于等于循环的生命周期，但是根据之前的推断，它又要大于等于函数的生命周期`'a`，而函数的生命周期又大于等于循环生命周期，
@@ -292,9 +292,9 @@ fn get_mut(&mut self, name: &String) -> &mut Symbol {
 
 其中的关键就在于返回的时候，新建一个引用，而不是使用中间状态的引用。
 
-## 新编译器 Polonius
+## 新借用检查器 Polonius
 
-针对现有编译器存在的各种问题，Rust 团队正在研发一个全新的编译器，名曰[`polonius`](https://github.com/rust-lang/polonius),但是目前它仍然处在开发阶段，如果想在自己项目中使用，需要在`rustc/RUSTFLAGS`中增加标志`-Zpolonius`，但是可能会导致编译速度变慢，或者引入一些新的编译错误。
+针对现有借用检查器存在的各种问题，Rust 团队正在研发一个全新的借用检查器，名曰[`polonius`](https://github.com/rust-lang/polonius),但是目前它仍然处在开发阶段，如果想在自己项目中使用，需要在`rustc/RUSTFLAGS`中增加标志`-Zpolonius`，但是可能会导致编译速度变慢，或者引入一些新的编译错误。
 
 ## 总结
 

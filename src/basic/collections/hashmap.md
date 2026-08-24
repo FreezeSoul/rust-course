@@ -1,6 +1,6 @@
 # KV 存储 HashMap
 
-和动态数组一样，`HashMap` 也是 Rust 标准库中提供的集合类型，但是又与动态数组不同，`HashMap` 中存储的是一一映射的 `KV` 键值对，并提供了平均复杂度为 `O(1)` 的查询方法，当我们希望通过一个 `Key` 去查询值时，该类型非常有用，以致于 Go 语言将该类型设置成了语言级别的内置特性。
+和动态数组一样，`HashMap` 也是 Rust 标准库中提供的集合类型，但是又与动态数组不同，`HashMap` 中存储的是一一映射的 `KV` 键值对，并提供了平均复杂度为 `O(1)` 的查询方法，当我们希望通过一个 `Key` 去查询值时，该类型非常有用，以至于 Go 语言将该类型设置成了语言级别的内置特性。
 
 Rust 中哈希类型（哈希映射）为 `HashMap<K,V>`，在其它语言中，也有类似的数据结构，例如 `hash map`，`map`，`object`，`hash table`，`字典` 等等，引用小品演员孙涛的一句台词：大家都是本地狐狸，别搁那装貂 :)。
 
@@ -24,7 +24,7 @@ my_gems.insert("河边捡的误以为是宝石的破石头", 18);
 
 很简单对吧？跟其它语言没有区别，聪明的同学甚至能够猜到该 `HashMap` 的类型：`HashMap<&str,i32>`。
 
-但是还有一点，你可能没有注意，那就是使用 `HashMap` 需要手动通过 `use ...` 从标准库中引入到我们当前的作用域中来，仔细回忆下，之前使用另外两个集合类型 `String` 和 `Vec` 时，我们是否有手动引用过？答案是 **No**，因为 `HashMap` 并没有包含在 Rust 的 [`prelude`](https://course.rs/appendix/prelude.html) 中（Rust 为了简化用户使用，提前将最常用的类型自动引入到作用域中）。
+但是还有一点，你可能没有注意，那就是使用 `HashMap` 需要手动通过 `use ...` 从标准库中引入到我们当前的作用域中来，仔细回忆下，之前使用另外两个集合类型 `String` 和 `Vec` 时，我们是否有手动引用过？答案是 **No**，因为 `HashMap` 并没有包含在 Rust 的 [`prelude`](https://beatai.org/rust-course/appendix/prelude) 中（Rust 为了简化用户使用，提前将最常用的类型自动引入到作用域中）。
 
 所有的集合类型都是动态的，意味着它们没有固定的内存大小，因此它们底层的数据都存储在内存堆上，然后通过一个存储在栈中的引用类型来访问。同时，跟其它集合类型一致，`HashMap` 也是内聚性的，即所有的 `K` 必须拥有同样的类型，`V` 也是如此。
 
@@ -81,7 +81,7 @@ fn main() {
 
 代码很简单，`into_iter` 方法将列表转为迭代器，接着通过 `collect` 进行收集，不过需要注意的是，`collect` 方法在内部实际上支持生成多种类型的目标集合，因此我们需要通过类型标注 `HashMap<_,_>` 来告诉编译器：请帮我们收集为 `HashMap` 集合类型，具体的 `KV` 类型，麻烦编译器您老人家帮我们推导。
 
-由此可见，Rust 中的编译器时而小聪明，时而大聪明，不过好在，它大聪明的时候，会自家人知道自己事，总归会通知你一声：
+由此可见，Rust 中的编译器时而小聪明，时而大聪明，不过好在，它大聪明的时候，会自家人知道自家事，总归会通知你一声：
 
 ```console
 error[E0282]: type annotations needed // 需要类型标注
@@ -186,6 +186,20 @@ let score: Option<&i32> = scores.get(&team_name);
 
 - `get` 方法返回一个 `Option<&i32>` 类型：当查询不到时，会返回一个 `None`，查询到时返回 `Some(&i32)`
 - `&i32` 是对 `HashMap` 中值的借用，如果不使用借用，可能会发生所有权的转移
+- `get` 方法的 `key` 参数必须是一个引用，如这里的 `scores.get(&team_name)`，这是因为 `HashMap<K, V>` 的 `get` 方法的签名如下：
+```rust
+impl<K, V> HashMap<K, V>
+where
+    K: Eq + Hash,
+{
+    pub fn get<Q>(&self, k: &Q) -> Option<&V>
+    where
+        K: Borrow<Q>,
+        Q: Hash + Eq + ?Sized,
+    { ... }
+}
+```
+- 可以看到签名中的 `k: &Q`。下面的特征约束 `K: Borrow<Q>` 是指类型 `K` 需要能以另一种形式 `Q` 被借用。在这种情况下，`String` 实现了 `Borrow<str>`，所以 `&String` 和 `&str` 类型都可以用于 `get` 方法。
 
 还可以继续拓展下，上面的代码中，如果我们想直接获得值类型的 `score` 该怎么办，答案简约但不简单：
 
@@ -309,7 +323,7 @@ assert_eq!(hash.get(&42), Some(&"the answer"));
 
 > 目前，`HashMap` 使用的哈希函数是 `SipHash`，它的性能不是很高，但是安全性很高。`SipHash` 在中等大小的 `Key` 上，性能相当不错，但是对于小型的 `Key` （例如整数）或者大型 `Key` （例如字符串）来说，性能还是不够好。若你需要极致性能，例如实现算法，可以考虑这个库：[ahash](https://github.com/tkaitchuck/ahash)。
 
-最后，如果你想要了解 `HashMap` 更多的用法，请参见本书的标准库解析章节：[HashMap 常用方法](https://course.rs/std/hashmap.html)
+最后，如果你想要了解 `HashMap` 更多的用法，请参见本书的标准库解析章节：[HashMap 常用方法](https://beatai.org/rust-course/std/hashmap)
 
 
 ## 课后练习

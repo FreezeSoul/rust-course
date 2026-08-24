@@ -55,7 +55,7 @@ eprintln!("Error: Could not complete task")
 
 它们仅应该被用于输出错误信息和进度信息，其它场景都应该使用 `print!` 系列。
 
-## {} 与 {:?}
+## `{}` 与 `{:?}`
 
 与其它语言常用的 `%d`，`%s` 不同，Rust 特立独行地选择了 `{}` 作为格式化占位符（说到这个，有点想吐槽下，Rust 中自创的概念其实还挺多的，真不知道该夸奖还是该吐槽-,-），事实证明，这种选择非常正确，它帮助用户减少了很多使用成本，你无需再为特定的类型选择特定的占位符，统一用 `{}` 来替代即可，剩下的类型推导等细节只要交给 Rust 去做。
 
@@ -86,7 +86,7 @@ fn main() {
 }
 ```
 
-对于数值、字符串、数组，可以直接使用 `{:?}` 进行输出，但是对于结构体，需要[派生`Debug`](https://course.rs/appendix/derive.html)特征后，才能进行输出，总之很简单。
+对于数值、字符串、数组，可以直接使用 `{:?}` 进行输出，但是对于结构体，需要[派生`Debug`](https://beatai.org/rust-course/appendix/derive)特征后，才能进行输出，总之很简单。
 
 #### `Display` 特征
 
@@ -111,7 +111,7 @@ println!("{}, {}, {}, {}", i, s, v, p);
 
 下面来一一看看这三种方式。
 
-#### {:#?}
+#### `{:#?}`
 
 `{:#?}` 与 `{:?}` 几乎一样，唯一的区别在于它能更优美地输出内容：
 
@@ -168,7 +168,7 @@ fn main() {
 
 #### 为外部类型实现 `Display` 特征
 
-在 Rust 中，无法直接为外部类型实现外部特征，但是可以使用[`newtype`](https://course.rs/advance/into-types/custom-type.html#newtype)解决此问题：
+在 Rust 中，无法直接为外部类型实现外部特征，但是可以使用[`newtype`](https://beatai.org/rust-course/advance/into-types/custom-type#newtype)解决此问题：
 
 ```rust
 struct Array(Vec<i32>);

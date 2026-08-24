@@ -4,7 +4,7 @@
 
 - [bindgen](https://crates.io/crates/bindgen), 自动生成 Rust -> C 的 FFI 绑定
 - [cc](https://crates.io/crates/cc), 编译 C/C++/汇编
-- [pkg-config](https://crates.io/crates/cc), 使用 `pkg-config` 工具检测系统库
+- [pkg-config](https://crates.io/crates/pkg-config), 使用 `pkg-config` 工具检测系统库
 - [cmake](https://crates.io/crates/cmake), 运行 `cmake` 来构建一个本地库
 - [autocfg](https://crates.io/crates/autocfg), [rustc_version](https://crates.io/crates/rustc_version), [version_check](https://crates.io/crates/version_check)，这些包提供基于 `rustc` 的当前版本来实现条件编译的方法
 
@@ -250,7 +250,7 @@ fn test_crc32() {
 }
 ```
 
-代码很清晰，也很简洁，这里就不再过多介绍，运行 [`cargo build --vv`](https://course.rs/cargo/reference/build-script/intro.html#构建脚本的输出) 来看看部分结果( 系统中需要已经安装 `libz` 库)：
+代码很清晰，也很简洁，这里就不再过多介绍，运行 [`cargo build --vv`](https://beatai.org/rust-course/cargo/reference/build-script/intro#构建脚本的输出) 来看看部分结果( 系统中需要已经安装 `libz` 库)：
 
 ```shell
 [libz-sys 0.1.0] cargo:rustc-link-search=native=/usr/lib
@@ -268,7 +268,7 @@ fn test_crc32() {
 
 若你有一个依赖于 `zlib` 的库，那可以使用 `libz-sys` 来自动发现或构建该库。这个功能对于交叉编译非常有用，例如 Windows 下往往不会安装 `zlib`。
 
-`libz-sys` 通过设置 [`include`](https://github.com/rust-lang/libz-sys/blob/3c594e677c79584500da673f918c4d2101ac97a1/build.rs#L156) 元数据来告知其它包去哪里找到 `zlib` 的头文件，然后我们的构建脚本可以通过 `DEP_Z_INCLUDE` 环境变量来读取 `include` 元数据( 关于元数据的传递，见[这里](https://course.rs/cargo/reference/build-script/intro.html#links) )。
+`libz-sys` 通过设置 [`include`](https://github.com/rust-lang/libz-sys/blob/3c594e677c79584500da673f918c4d2101ac97a1/build.rs#L156) 元数据来告知其它包去哪里找到 `zlib` 的头文件，然后我们的构建脚本可以通过 `DEP_Z_INCLUDE` 环境变量来读取 `include` 元数据( 关于元数据的传递，见[这里](https://beatai.org/rust-course/cargo/reference/build-script/intro#links) )。
 
 ```toml
 # Cargo.toml

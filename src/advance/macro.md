@@ -1,6 +1,6 @@
 # Macro 宏编程
 
-在编程世界可以说是谈“宏”色变，原因在于 C 语言中的宏是非常危险的东东，但并不是所有语言都像 C 这样，例如对于古老的语言 Lisp 来说，宏就是就是一个非常强大的好帮手。
+在编程世界可以说是谈“宏”色变，原因在于 C 语言中的宏是非常危险的东东，但并不是所有语言都像 C 这样，例如对于古老的语言 Lisp 来说，宏就是一个非常强大的好帮手。
 
 那话说回来，在 Rust 中宏到底是好是坏呢？本章将带你揭开它的神秘面纱。
 
@@ -34,7 +34,7 @@ fn main() {
 
 从根本上来说，宏是通过一种代码来生成另一种代码，如果大家熟悉元编程，就会发现两者的共同点。
 
-在[附录 D](https://course.rs/appendix/derive.html)中讲到的 `derive` 属性，就会自动为结构体派生出相应特征所需的代码，例如 `#[derive(Debug)]`，还有熟悉的 `println!` 和 `vec!`，所有的这些宏都会展开成相应的代码，且很可能是长得多的代码。
+在[附录 D](https://beatai.org/rust-course/appendix/derive)中讲到的 `derive` 属性，就会自动为结构体派生出相应特征所需的代码，例如 `#[derive(Debug)]`，还有熟悉的 `println!` 和 `vec!`，所有的这些宏都会展开成相应的代码，且很可能是长得多的代码。
 
 总之，元编程可以帮我们减少所需编写的代码，也可以一定程度上减少维护的成本，虽然函数复用也有类似的作用，但是宏依然拥有自己独特的优势。
 
@@ -76,7 +76,7 @@ match target {
 
 #### 简化版的 vec!
 
-在[动态数组 Vector 章节](https://course.rs/basic/collections/vector.html#vec)中，我们学习了使用 `vec!` 来便捷的初始化一个动态数组:
+在[动态数组 Vector 章节](https://beatai.org/rust-course/basic/collections/vector#vec)中，我们学习了使用 `vec!` 来便捷的初始化一个动态数组:
 
 ```rust
 let v: Vec<u32> = vec![1, 2, 3];
@@ -103,7 +103,7 @@ macro_rules! vec {
 
 简化实现版本？这也太难了吧！！只能说，欢迎来到宏的世界，在这里你能见到优雅 Rust 的另一面:) 标准库中的 `vec!` 还包含了预分配内存空间的代码，如果引入进来，那大家将更难以接受。
 
-`#[macro_export]` 注释将宏进行了导出，这样其它的包就可以将该宏引入到当前作用域中，然后才能使用。可能有同学会提问：我们在使用标准库 `vec!` 时也没有引入宏啊，那是因为 Rust 已经通过 [`std::prelude`](https://course.rs/appendix/prelude.html) 的方式为我们自动引入了。
+`#[macro_export]` 注释将宏进行了导出，这样其它的包就可以将该宏引入到当前作用域中，然后才能使用。可能有同学会提问：我们在使用标准库 `vec!` 时也没有引入宏啊，那是因为 Rust 已经通过 [`std::prelude`](https://beatai.org/rust-course/appendix/prelude) 的方式为我们自动引入了。
 
 紧接着，就使用 `macro_rules!` 进行了宏定义，需要注意的是宏的名称是 `vec`，而不是 `vec!`，后者的感叹号只在调用时才需要。
 
@@ -111,7 +111,7 @@ macro_rules! vec {
 
 由于 `vec` 宏只有一个模式，因此它只能匹配一种源代码，其它类型的都将导致报错，而更复杂的宏往往会拥有更多的分支。
 
-虽然宏和 `match` 都称之为模式，但是前者跟[后者](https://course.rs/basic/match-pattern/all-patterns.html)的模式规则是不同的。如果大家想要更深入的了解宏的模式，可以查看[这里](https://doc.rust-lang.org/reference/macros-by-example.html)。
+虽然宏和 `match` 都称之为模式，但是前者跟[后者](https://beatai.org/rust-course/basic/match-pattern/all-patterns)的模式规则是不同的。如果大家想要更深入的了解宏的模式，可以查看[这里](https://doc.rust-lang.org/reference/macros-by-example.html)。
 
 #### 模式解析
 
@@ -119,14 +119,27 @@ macro_rules! vec {
 
 首先，我们使用圆括号 `()` 将整个宏模式包裹其中。紧随其后的是 `$()`，跟括号中模式相匹配的值(传入的 Rust 源代码)会被捕获，然后用于代码替换。在这里，模式 `$x:expr` 会匹配任何 Rust 表达式并给予该模式一个名称：`$x`。
 
-`$()` 之后的逗号说明在 `$()` 所匹配的代码的后面会有一个可选的逗号分隔符，紧随逗号之后的 `*` 说明 `*` 之前的模式会被匹配零次或任意多次(类似正则表达式)。
+`$()` 之后的逗号说明 `$()` 所匹配的代码使用逗号分隔符分割，紧随逗号之后的 `*` 说明 `*` 之前的模式(`$()`内的部分)会被匹配零次或任意多次(类似正则表达式)(且以逗号分割)。
 
 当我们使用 `vec![1, 2, 3]` 来调用该宏时，`$x` 模式将被匹配三次，分别是 `1`、`2`、`3`。为了帮助大家巩固，我们再来一起过一下：
 
 1. `$()` 中包含的是模式 `$x:expr`，该模式中的 `expr` 表示会匹配任何 Rust 表达式，并给予该模式一个名称 `$x`
 2. 因此 `$x` 模式可以跟整数 `1` 进行匹配，也可以跟字符串 "hello" 进行匹配: `vec!["hello", "world"]`
-3. `$()` 之后的逗号，意味着`1` 和 `2` 之间可以使用逗号进行分割，也意味着 `3` 既可以没有逗号，也可以有逗号：`vec![1, 2, 3,]`
+3. `$()` 之后的逗号，意味着 `1` 、 `2` 和 `3` 之间使用逗号进行分割
 4. `*` 说明之前的模式可以出现零次也可以任意次，这里出现了三次
+
+__需要注意的是，此处简化的 `vec!` 实现中， `3` 后面是不能继续接逗号的( `vec![1, 2, 3]` 合法，但 `vec![1, 2, 3,]` 不合法)，要匹配最后一个可有可无的逗号，可参考Rust官方的 `vec!` 宏定义，关键代码如下：__
+
+```rust
+($($x:expr),+ $(,)?) => (
+    <[_]>::into_vec(
+        // This rustc_box is not required, but it produces a dramatic improvement in compile
+        // time when constructing arrays with many elements.
+        #[rustc_box]
+        $crate::boxed::Box::new([$($x),+])
+    )
+);
+```
 
 接下来，我们再来看看与模式相关联、在 `=>` 之后的代码：
 
@@ -202,7 +215,7 @@ pub fn some_name(input: TokenStream) -> TokenStream {
 
 假设我们有一个特征 `HelloMacro`，现在有两种方式让用户使用它：
 
-- 为每个类型手动实现该特征，就像之前[特征章节](https://course.rs/basic/trait/trait.html#为类型实现特征)所做的
+- 为每个类型手动实现该特征，就像之前[特征章节](https://beatai.org/rust-course/basic/trait/trait#为类型实现特征)所做的
 - 使用过程宏来统一实现该特征，这样用户只需要对类型进行标记即可：`#[derive(HelloMacro)]`
 
 以上两种方式并没有孰优孰劣，主要在于不同的类型是否可以使用同样的默认特征实现，如果可以，那过程宏的方式可以帮我们减少很多代码实现:
@@ -231,7 +244,7 @@ $ cd hello_macro/
 $ touch src/lib.rs
 ```
 
-此时，`src` 目录下包含两个文件 `lib.rs` 和 `main.rs`，前者是 `lib` 包根，后者是二进制包根，如果大家对包根不熟悉，可以看看[这里](https://course.rs/basic/crate-module/crate.html)。
+此时，`src` 目录下包含两个文件 `lib.rs` 和 `main.rs`，前者是 `lib` 包根，后者是二进制包根，如果大家对包根不熟悉，可以看看[这里](https://beatai.org/rust-course/basic/crate-module/crate)。
 
 接下来，先在 `src/lib.rs` 中定义过程宏所需的 `HelloMacro` 特征和其关联函数:
 
@@ -320,9 +333,9 @@ hello_macro_derive = { path = "../hello_macro/hello_macro_derive" }
 # hello_macro_derive = { path = "./hello_macro_derive" }
 ```
 
-此时，`hello_macro` 项目就可以成功的引用到 `hello_macro_derive` 本地包了，对于项目依赖引入的详细介绍，可以参见 [Cargo 章节](https://course.rs/cargo/dependency.html)。
+此时，`hello_macro` 项目就可以成功的引用到 `hello_macro_derive` 本地包了，对于项目依赖引入的详细介绍，可以参见 [Cargo 章节](https://beatai.org/rust-course/cargo/guide/dependencies)。
 
-另外，学习过程更好的办法是通过展开宏来阅读和调试自己写的宏，这里需要用到一个 cargo-expand 的工具，可以通过下面的命令安装
+另外，学习过程宏更好的办法是通过展开宏来阅读和调试自己写的宏，这里需要用到一个 cargo-expand 的工具，可以通过下面的命令安装：
 ```bash
 cargo install cargo-expand
 ```
@@ -347,8 +360,6 @@ quote = "1.0"
 其次，在 `hello_macro_derive/src/lib.rs` 中添加如下代码：
 
 ```rust
-extern crate proc_macro;
-
 use proc_macro::TokenStream;
 use quote::quote;
 use syn;

@@ -301,7 +301,7 @@ impl Write for MockTcpStream {
 }
 ```
 
-最后，我们的 mock 需要实现 `Unpin` 特征，表示它可以在内存中安全的移动，具体内容在[前面章节](https://course.rs/advance/async/pin-unpin.html)有讲。
+最后，我们的 mock 需要实现 `Unpin` 特征，表示它可以在内存中安全的移动，具体内容在[前面章节](https://beatai.org/rust-course/advance/async/pin-unpin)有讲。
 
 ```rust
 use std::marker::Unpin;
@@ -323,9 +323,9 @@ async fn test_handle_connection() {
         write_data: Vec::new(),
     };
 
+     // let mut buf = [0u8; 1024];
+    // stream.read(&mut buf).await.unwrap();
     handle_connection(&mut stream).await;
-    let mut buf = [0u8; 1024];
-    stream.read(&mut buf).await.unwrap();
 
     let expected_contents = fs::read_to_string("hello.html").unwrap();
     let expected_response = format!("HTTP/1.1 200 OK\r\n\r\n{}", expected_contents);
